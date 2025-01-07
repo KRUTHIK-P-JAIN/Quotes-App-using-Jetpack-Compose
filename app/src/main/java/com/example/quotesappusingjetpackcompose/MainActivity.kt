@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.example.quotesappusingjetpackcompose.screens.QuoteDetailScreen
 import com.example.quotesappusingjetpackcompose.screens.QuoteListScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,8 +34,12 @@ fun App() {
     //isDataLoaded helps in re creating the composable everytime state changes.
     //using data.isNotEmpty() we cannot achieve re creating the composable.
     if (DataManager.isDataLoaded.value) {
-        QuoteListScreen(data = DataManager.data) {
-
+        if (DataManager.currentPage.value == Pages.LISTING) {
+            QuoteListScreen(data = DataManager.data) {
+                DataManager.switchPages(it)
+            }
+        } else {
+            DataManager.currentQuote?.let { QuoteDetailScreen(quote = it) }
         }
     } else {
         Box(
@@ -47,4 +52,9 @@ fun App() {
             )
         }
     }
+}
+
+enum class Pages {
+    LISTING,
+    DETAIL
 }

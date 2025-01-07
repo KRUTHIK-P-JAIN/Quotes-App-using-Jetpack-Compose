@@ -8,6 +8,8 @@ import com.google.gson.Gson
 object DataManager {
 
     var data = emptyArray<Quote>()
+    var currentQuote: Quote? = null
+    var currentPage = mutableStateOf(Pages.LISTING)
     var isDataLoaded = mutableStateOf(false)
 
     fun loadAssetsFromFile(context: Context) {
@@ -29,5 +31,13 @@ object DataManager {
         data = gson.fromJson(json, Array<Quote>::class.java)
 
         isDataLoaded.value = true
+    }
+
+    fun switchPages(quote: Quote?) {
+        if (currentPage.value == Pages.LISTING) {
+            currentQuote = quote
+            currentPage.value = Pages.DETAIL
+        } else
+            currentPage.value = Pages.LISTING
     }
 }
